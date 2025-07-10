@@ -8,7 +8,9 @@ import Dashboard from './pages/Admin/Dashboard'
 import AddBlog from './pages/Admin/AddBlog'
 import BlogList from './pages/Admin/BlogList'
 import Comments from './pages/Admin/Comments'
-import Login from './components/Admin/Login'
+import Login from './components/Admin/Login' 
+import 'quill/dist/quill.snow.css'
+
 function App() {
   return (
     <div>
