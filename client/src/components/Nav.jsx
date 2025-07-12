@@ -21,7 +21,7 @@ function Nav() {
     setSearchOpen(!searchOpen);
   };
 
-  const { navigate } = useAppContext();
+  const { navigate, token } = useAppContext();
   return (
     <header className={`sticky top-0 z-50 shadow-2xl bg-white`}>
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -74,13 +74,13 @@ function Nav() {
             className="p-2 rounded-full hover:gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
             aria-label="Search"
           >
-            <span className="hidden md:inline">Login</span>
+            <span className="hidden md:inline"> {token ? 'Dashboard' : 'Login'} </span>
           </button>
 
           <button>
             <MenuIcon onClick={toggleMobileMenu} />
-          </button>
-        </div>
+          </button>  
+         </div>
       </div>
       {searchOpen && (
         <div
