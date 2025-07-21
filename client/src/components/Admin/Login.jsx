@@ -19,7 +19,7 @@ function Login() {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log("Login error", error.message);
+      console.log(" Login error", error.message);
       toast.error(data.message);
     }
   };
@@ -37,7 +37,7 @@ function Login() {
             onSubmit={handleSubmit}
             className="mt-6 w-full sm:max-w-md text-gray-600"
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col"> 
               <label> Email </label>
               <input
                 value={email}
