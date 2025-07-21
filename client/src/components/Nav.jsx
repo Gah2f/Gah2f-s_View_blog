@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import SunnyIcon from "@mui/icons-material/Sunny";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppContext } from "../Context/AppContext";
+
 function Nav() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { navigate, token, input, setInput } = useAppContext();
+  const inputRef = useRef();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -21,7 +24,14 @@ function Nav() {
     setSearchOpen(!searchOpen);
   };
 
-  const { navigate, token } = useAppContext();
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    setInput(inputRef.current.value);
+  };
+
+  useEffect(() => {
+    onSubmitHandler();
+  }, []);
   return (
     <header className={`sticky top-0 z-50 shadow-2xl bg-white`}>
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -74,13 +84,16 @@ function Nav() {
             className="p-2 rounded-full hover:gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
             aria-label="Search"
           >
-            <span className="hidden md:inline"> {token ? 'Dashboard' : 'Login'} </span>
+            <span className="hidden md:inline">
+              {" "}
+              {token ? "Dashboard" : "Login"}{" "}
+            </span>
           </button>
 
           <button>
             <MenuIcon onClick={toggleMobileMenu} />
-          </button>  
-         </div>
+          </button>
+        </div>
       </div>
       {searchOpen && (
         <div
@@ -89,8 +102,9 @@ function Nav() {
           } shadow-md p-4`}
         >
           <div className="container mx-auto flex items-center">
-            <div className="relative flex-1">
+            <form onSubmit={onSubmitHandler} className="relative flex-1">
               <input
+                ref={inputRef}
                 type="text"
                 placeholder="Search articles ..."
                 className={`w-full p-3 pl-10 rounded-lg border-none focus:ring-2 focus:ring-blue-500 ${
@@ -100,7 +114,7 @@ function Nav() {
                 }`}
               />
               <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
+            </form>
 
             <button
               onClick={toggleSearch}
