@@ -9,24 +9,56 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer.jsx";
 import Moment from "moment";
 import Loader from "../components/Loader.jsx";
+import { useAppContext } from "../Context/AppContext.jsx";
+import toast from "react-hot-toast";
 
 function Blog() {
   const { id } = useParams();
+  const {axios} = useAppContext();
   const [data, setData] = useState(null);
   const [comments, setComments] = useState([]);
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
+
   const fetchBlogData = async () => {
-    const data = blog_data.find((item) => item._id == id);
-    setData(data);
+    try {
+      const data = await axios.get(`/api/blog/${id}`);
+      data.success ? setData(data.blog) : toast.error(data.message);
+    } catch (error) {
+      console.log("Error fetching blog data:", error);
+      toast.error("Failed to fetch blog data");
+    }
   };
 
   const fetchComments = async () => {
-    setComments(comments_data);
+   try {
+    const {data} = await axios.get('/api/blog/comments', {blodId: id});
+    if(data.success) {
+      setComments(data.comments);
+    } else {
+      toast.error(data.message);
+    }
+   } catch (error) {
+      console.log("Error fetching comments:", error);
+      toast.error("Failed to fetch comments");
+   }
   };
 
   const addComment = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); 
+   try {
+     const {data} = await axios.post('/api/blog/add-comment', {blog: id, name, content});
+     if(data.success) {
+      toast.success("Comment added successfully");
+       setName("");
+       setContent("");
+     } else {
+       toast.error(data.message);
+     }
+   } catch (error) {
+     console.log("Error adding comment:", error);
+     toast.error("Failed to add comment");
+   }
   };
   useEffect(() => {
     fetchBlogData();
@@ -42,7 +74,7 @@ function Blog() {
       />
       <Nav />
       <div className="text-center mt-20 text-gray-600">
-        <p className="text-primary mt-20 text-gray-600">
+        <p className="text-primary mt-2">
           Published on {Moment(data.createdAt).format("MMMM Do YYYY")}
         </p>
 
