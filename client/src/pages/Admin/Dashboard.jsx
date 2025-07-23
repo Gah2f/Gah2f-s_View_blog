@@ -5,6 +5,8 @@ import {
   dashboard_data,
 } from "../../assets/QuickBlog-Assets/assets";
 import BlogTableItems from "../../components/Admin/BlogTableItems";
+import { useAppContext } from "../../Context/AppContext";
+import toast from "react-hot-toast";
 
 function Dashboard() {
   const [dashBoardData, setDashBoardData] = useState({
@@ -13,9 +15,16 @@ function Dashboard() {
     drafts: 0,
     recentBlogs: [],
   });
+  const { axios } = useAppContext();
 
   const fetchDashBoard = async () => {
-    setDashBoardData(dashboard_data);
+    try {
+      const { data } = await axios.get("/api/admin/dashboard");
+      data.success ? setDashBoardData(data.dashBoardData) : toast.error(data.message);
+    } catch (error) {
+      console.log("Error fetching dashboard data:", error);
+      toast.error("Failed to fetch dashboard data");
+    }
   };
 
   useEffect(() => {
