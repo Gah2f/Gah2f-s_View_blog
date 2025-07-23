@@ -4,7 +4,10 @@ import { Outlet } from "react-router-dom";
 import SideBar from "../../components/Admin/SideBar";
 
 function Layout() {
-  const { navigate, logout } = useAppContext();
+
+  const { navigate , logout } = useAppContext();
+
+  
 
   return (
     <>
