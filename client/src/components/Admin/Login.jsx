@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAppContext } from "../../Context/AppContext";
+import { useAppContext } from "../../Context/AppContext.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post("/api/admin/login", { email, password });
+      const { data } = await axios.post("/api/admin/login", { email, password });
 
       if (data.success) {
         setToken(data.token);
