@@ -1,48 +1,49 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { data, useNavigate } from 'react-router-dom';
-import axios from 'axios' 
+import { data, useNavigate } from "react-router-dom";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 export const AppContext = createContext();
 
-
 export const AppContextProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-  }; 
+  };
 
   const navigate = useNavigate();
-  const logout = () =>{
-    navigate('/')
-  }
+  const logout = () => {
+    axios.defaults.headers.common["Authorization"] = "";
+    setToken(null);
+    navigate("/");
+  };
   const [token, setToken] = useState(null);
-  const [blogs,setBlogs] = useState([]);
-  const [input, setInput] = useState(''); 
+  const [blogs, setBlogs] = useState([]);
+  const [input, setInput] = useState("");
 
   const fetchBlogs = async () => {
     try {
-     const {data} =  await axios.get('/api/blog/all');
+      const { data } = await axios.get("/api/blog/all");
 
-     data.success ? setBlogs(data.blogs) : toast.error(data.message)
-
+      data.success ? setBlogs(data.blogs) : toast.error(data.message);
     } catch (error) {
       console.log(error.message);
-      toast.error(data.message);
+      toast.error(error.response?.data?.message || "Failed to fetch blogs");
     }
-  } 
+  };
 
- 
-  useEffect(()=>{
+  useEffect(() => {
     fetchBlogs();
-    const token = localStorage.getItem('token');
-    if(token) {
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
       setToken(token);
-      axios.defaults.headers.common['Authorization'] = `${token}`;
+      axios.defaults.headers.common["Authorization"] = `${token}`;
     }
-  },[])
+  }, []);
   const value = {
     axios,
     toggleDarkMode,
@@ -55,7 +56,7 @@ export const AppContextProvider = ({ children }) => {
     setBlogs,
     input,
     setInput,
-    toast
+    toast,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
