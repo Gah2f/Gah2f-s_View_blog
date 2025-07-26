@@ -5,7 +5,7 @@ function Articles() {
   const {navigate} = useAppContext();
   return (
     <div>
-      <h1 className='text-5xl'>This is article page.</h1>
+      <h1 className='text-5xl font-bold'>This is article page.</h1>
     </div>
   )
 }
